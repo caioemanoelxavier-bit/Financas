@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanças Pessoais - Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Login/Register Screen -->
+    <div class="auth-screen" id="authScreen">
+        <div class="auth-container">
+            <div class="auth-header">
+                <div class="auth-logo">💰</div>
+                <h1>FinPessoal</h1>
+                <p>Controle suas finanças de forma simples</p>
+            </div>
+            <form class="auth-form" id="loginForm">
+                <h2>Entrar</h2>
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="seu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginSenha">Senha</label>
+                    <input type="password" id="loginSenha" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+                <p class="auth-switch">Não tem conta? <a href="#" id="showRegister">Criar conta</a></p>
+            </form>
+            <form class="auth-form hidden" id="registerForm">
+                <h2>Criar Conta</h2>
+                <div class="form-group">
+                    <label for="regNome">Nome Completo</label>
+                    <input type="text" id="regNome" placeholder="João Silva" required>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Email</label>
+                    <input type="email" id="regEmail" placeholder="seu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="regCpf">CPF</label>
+                    <input type="text" id="regCpf" placeholder="12345678900" maxlength="11" required>
+                </div>
+                <div class="form-group">
+                    <label for="regDataNasc">Data de Nascimento</label>
+                    <input type="date" id="regDataNasc">
+                </div>
+                <div class="form-group">
+                    <label for="regSenha">Senha</label>
+                    <input type="password" id="regSenha" placeholder="Mínimo 6 caracteres" required>
+                </div>
+                <div class="form-group">
+                    <label for="regSenhaConf">Confirmar Senha</label>
+                    <input type="password" id="regSenhaConf" placeholder="Repita a senha" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Criar Conta</button>
+                <p class="auth-switch">Já tem conta? <a href="#" id="showLogin">Fazer login</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="app-container hidden" id="appContainer">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">💰</span>
+                    <span class="logo-text">FinPessoal</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-page="dashboard"><span class="nav-icon">📊</span><span>Dashboard</span></a>
+                <a href="#" class="nav-item" data-page="transacoes"><span class="nav-icon">💳</span><span>Transações</span></a>
+                <a href="#" class="nav-item" data-page="contas"><span class="nav-icon">🏦</span><span>Contas</span></a>
+                <a href="#" class="nav-item" data-page="metas"><span class="nav-icon">🎯</span><span>Metas</span></a>
+                <a href="#" class="nav-item" data-page="relatorios"><span class="nav-icon">📈</span><span>Relatórios</span></a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">--</div>
+                    <div class="user-details">
+                        <span class="user-name" id="userName">Carregando...</span>
+                        <span class="user-email" id="userEmail">-</span>
+                    </div>
+                </div>
+                <button class="btn btn-logout" id="btnLogout"><span>🚪</span> Sair</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <button class="menu-toggle" id="menuToggle">☰</button>
+                <div class="header-title">
+                    <h1 id="pageTitle">Dashboard</h1>
+                    <p id="pageSubtitle">Visão geral das suas finanças</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" id="btnGerarDados">🎲 Gerar Dados Mock</button>
+                    <button class="btn btn-primary" id="btnNovaTransacao">+ Nova Transação</button>
+                </div>
+            </header>
+
+            <!-- Dashboard Page -->
+            <section class="page active" id="page-dashboard">
+                <!-- Welcome Card -->
+                <div class="welcome-card hidden" id="welcomeCard">
+                    <div class="welcome-icon">👋</div>
+                    <h2>Bem-vindo ao FinPessoal!</h2>
+                    <p>Para começar, cadastre suas contas bancárias. Depois você pode gerar dados simulados para testar.</p>
+                    <button class="btn btn-primary" id="btnAddContaWelcome">+ Adicionar Conta</button>
+                </div>
+
+                <!-- Summary Cards -->
+                <div class="summary-cards">
+                    <div class="summary-card patrimony">
+                        <div class="card-icon">💎</div>
+                        <div class="card-content">
+                            <span class="card-label">Patrimônio Total</span>
+                            <span class="card-value" id="patrimonioTotal">R$ 0,00</span>
+                        </div>
+                    </div>
+                    <div class="summary-card income">
+                        <div class="card-icon">📈</div>
+                        <div class="card-content">
+                            <span class="card-label">Receitas (Mês)</span>
+                            <span class="card-value" id="receitasMes">R$ 0,00</span>
+                        </div>
+                    </div>
+                    <div class="summary-card expenses">
+                        <div class="card-icon">📉</div>
+                        <div class="card-content">
+                            <span class="card-label">Despesas (Mês)</span>
+                            <span class="card-value" id="despesasMes">R$ 0,00</span>
+                        </div>
+                    </div>
+                    <div class="summary-card balance">
+                        <div class="card-icon">⚖️</div>
+                        <div class="card-content">
+                            <span class="card-label">Saldo do Mês</span>
+                            <span class="card-value" id="saldoMes">R$ 0,00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="charts-row">
+                    <div class="chart-card large">
+                        <h3 class="chart-title">📊 Evolução Mensal (Últimos 12 meses)</h3>
+                        <div class="chart-container" id="evolucaoChart">
+                            <div class="empty-state"><span class="empty-icon">📊</span><p>Sem dados para exibir</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Two Column Layout -->
+                <div class="charts-row">
+                    <!-- Expenses by Category -->
+                    <div class="chart-card">
+                        <h3 class="chart-title">🍔 Despesas por Categoria</h3>
+                        <div class="chart-container" id="expensesChart">
+                            <div class="empty-state"><span class="empty-icon">📊</span><p>Sem despesas este mês</p></div>
+                        </div>
+                    </div>
+                    <!-- Payment Types -->
+                    <div class="chart-card">
+                        <h3 class="chart-title">💳 Por Forma de Pagamento</h3>
+                        <div class="chart-container" id="paymentChart">
+                            <div class="empty-state"><span class="empty-icon">💳</span><p>Sem dados</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accounts and Top Expenses -->
+                <div class="charts-row">
+                    <div class="chart-card">
+                        <h3 class="chart-title">🏦 Minhas Contas</h3>
+                        <div class="accounts-mini" id="accountsMini">
+                            <div class="empty-state"><span class="empty-icon">🏦</span><p>Nenhuma conta cadastrada</p></div>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <h3 class="chart-title">🔝 Maiores Despesas</h3>
+                        <div id="topExpenses">
+                            <div class="empty-state"><span class="empty-icon">📊</span><p>Sem despesas</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions -->
+                <div class="chart-card full-width">
+                    <h3 class="chart-title">📋 Últimas Transações</h3>
+                    <div class="transactions-list" id="recentTransactions">
+                        <div class="empty-state"><span class="empty-icon">💳</span><p>Nenhuma transação registrada</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Transactions Page -->
+            <section class="page" id="page-transacoes">
+                <div class="filters-bar">
+                    <select class="filter-select" id="filterTipo">
+                        <option value="">Todos os Tipos</option>
+                        <option value="Despesa">Despesas</option>
+                        <option value="Receita">Receitas</option>
+                    </select>
+                    <select class="filter-select" id="filterCategoria">
+                        <option value="">Todas Categorias</option>
+                    </select>
+                    <input type="month" class="filter-date" id="filterMes">
+                </div>
+                <div class="transactions-table-container">
+                    <table class="transactions-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Descrição</th>
+                                <th>Categoria</th>
+                                <th>Conta</th>
+                                <th>Tipo</th>
+                                <th>Pagamento</th>
+                                <th>Valor</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionsBody">
+                            <tr class="empty-row"><td colspan="8" class="empty-cell"><div class="empty-state"><span class="empty-icon">💳</span><p>Nenhuma transação encontrada</p></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Accounts Page -->
+            <section class="page" id="page-contas">
+                <div class="page-header">
+                    <h2>Minhas Contas Bancárias</h2>
+                    <button class="btn btn-primary" id="btnAddContaPage">+ Adicionar Conta</button>
+                </div>
+                <div class="accounts-full-grid" id="accountsFullGrid">
+                    <div class="empty-state"><span class="empty-icon">🏦</span><p>Nenhuma conta cadastrada</p></div>
+                </div>
+            </section>
+
+            <!-- Goals Page -->
+            <section class="page" id="page-metas">
+                <div class="page-header">
+                    <h2>Metas Financeiras</h2>
+                    <button class="btn btn-primary" id="btnAddMeta">+ Nova Meta</button>
+                </div>
+                <div class="goals-grid" id="goalsGrid">
+                    <div class="empty-state"><span class="empty-icon">🎯</span><p>Nenhuma meta cadastrada</p></div>
+                </div>
+            </section>
+
+            <!-- Reports Page -->
+            <section class="page" id="page-relatorios">
+                <div class="page-header">
+                    <h2>Relatórios</h2>
+                    <select class="filter-select" id="reportMonth">
+                        <option value="">Este mês</option>
+                    </select>
+                </div>
+                <div class="stats-grid" id="statsGrid">
+                    <div class="stat-card">
+                        <span class="stat-label">Total de Transações</span>
+                        <span class="stat-value" id="statTotal">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Média Diária de Gastos</span>
+                        <span class="stat-value" id="statMedia">R$ 0,00</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Maior Gasto</span>
+                        <span class="stat-value" id="statMaior">R$ 0,00</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Dia Maior Gasto</span>
+                        <span class="stat-value" id="statDia">-</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal Nova Transação -->
+    <div class="modal-overlay" id="modalTransacao">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Nova Transação</h2>
+                <button class="modal-close" id="modalTransacaoClose">&times;</button>
+            </div>
+            <form id="formTransacao">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tipo</label>
+                        <select id="transTipo" required><option value="">Selecione...</option><option value="Receita">Receita</option><option value="Despesa">Despesa</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Categoria</label>
+                        <select id="transCategoria" required><option value="">Selecione...</option></select>
+                    </div>
+                </div>
+                <div class="form-group"><label>Descrição</label><input type="text" id="transDescricao" placeholder="Ex: Supermercado Extra" required></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Valor (R$)</label><input type="number" id="transValor" step="0.01" min="0.01" placeholder="0,00" required></div>
+                    <div class="form-group"><label>Data</label><input type="date" id="transData" required></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Conta</label><select id="transConta"><option value="">Selecione...</option></select></div>
+                    <div class="form-group"><label>Forma de Pagamento</label>
+                        <select id="transPagto" required>
+                            <option value="Debito">Débito</option>
+                            <option value="Credito">Crédito</option>
+                            <option value="PIX">PIX</option>
+                            <option value="Dinheiro">Dinheiro</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="btnCancelarTrans">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Nova Conta -->
+    <div class="modal-overlay" id="modalConta">
+        <div class="modal">
+            <div class="modal-header"><h2>Nova Conta Bancária</h2><button class="modal-close" id="modalContaClose">&times;</button></div>
+            <form id="formConta">
+                <div class="form-group"><label>Banco</label><select id="contaBanco" required><option value="">Selecione o banco...</option></select></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Agência</label><input type="text" id="contaAgencia" placeholder="0000" required></div>
+                    <div class="form-group"><label>Número da Conta</label><input type="text" id="contaNumero" placeholder="00000-0" required></div>
+                </div>
+                <div class="form-group"><label>Nome da Conta (apelido)</label><input type="text" id="contaNome" placeholder="Ex: Nubank Principal"></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Tipo de Conta</label>
+                        <select id="contaTipo"><option value="Corrente">Corrente</option><option value="Poupanca">Poupança</option><option value="Investimento">Investimento</option></select>
+                    </div>
+                    <div class="form-group"><label>Saldo Inicial (R$)</label><input type="number" id="contaSaldo" step="0.01" value="0"></div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="btnCancelarConta">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Nova Meta -->
+    <div class="modal-overlay" id="modalMeta">
+        <div class="modal">
+            <div class="modal-header"><h2>Nova Meta Financeira</h2><button class="modal-close" id="modalMetaClose">&times;</button></div>
+            <form id="formMeta">
+                <div class="form-group"><label>Nome da Meta</label><input type="text" id="metaNome" placeholder="Ex: Reserva de Emergência" required></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Valor Objetivo (R$)</label><input type="number" id="metaValor" step="0.01" min="1" placeholder="10000" required></div>
+                    <div class="form-group"><label>Data Limite</label><input type="date" id="metaData" required></div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="btnCancelarMeta">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"><span class="toast-message"></span></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
